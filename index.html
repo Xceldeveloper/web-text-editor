@@ -1,0 +1,715 @@
+<!-- 
+Xceldevloper (ov)
+07/16/2020
+
+Reference
+https://developer.mozilla.org/en-US/docs/Web/API/document/execCommand
+ -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="materialdesignicons.min.css">
+  <title>Text Editor | Designed by Xceldeveloper</title>
+
+  <style>
+    body {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    #container {
+      width: 100vw;
+      height: 100vh;
+      background-color: #ededed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #header {
+      width: 98%;
+      height: 100px;
+      background-color: #fff;
+      margin: 1% auto;
+      display: flex;
+
+      padding: 10px;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+
+    }
+
+    #sub-cover {
+      width: auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+
+    }
+
+    #sub-cover2 {
+
+
+      height: 100%;
+    }
+
+    .sub {
+      flex: 1;
+
+      width: auto;
+
+    }
+
+
+    #box {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      overflow: auto;
+
+    }
+
+    #text-editor {
+      width: 70%;
+      height: 100%;
+      padding: 10px;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+      background-color: #fff;
+      margin: auto;
+      font-size: 16px;
+      resize: none;
+      outline-style: none;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-y: auto;
+
+    }
+
+
+    #input-font {
+      height: 30px;
+      padding: 5px;
+      border-radius: 8px 0px 0px 8px;
+      background-color: #fff;
+      margin: 10px 0px 5px 5px;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      outline-style: none;
+    }
+
+    #fontSize {
+      height: 30px;
+      padding: 5px;
+      margin: 0px 0px 0px 0px;
+      border-radius: 0px 8px 8px 0px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      outline-style: none;
+    }
+
+
+
+    #increase-font,
+    #decrease-indent,
+    #list-numbered {
+      width: 30px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-size: 18px;
+      height: 30px;
+      margin: 0px 0px 0px 10px;
+      cursor: pointer;
+      outline-style: none;
+      padding: 0px;
+    }
+
+
+
+    #list-numbered {
+      margin-left: 35px;
+    }
+
+    #decrease-font,
+    #increase-indent,
+    #list-bulleted {
+      width: 30px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-size: 18px;
+      height: 30px;
+      margin: 0px 0px 10px 0px;
+      cursor: pointer;
+      outline-style: none;
+      padding: 0px;
+    }
+
+    #decrease-indent {
+      margin-left: 21px;
+    }
+
+    .format-btn-wrapper,
+    .justify-btn-wrapper {
+      margin: 10px 0px;
+      width: auto;
+      display: inline-block;
+      padding: 0px 5px;
+    }
+
+    .format-btn,
+    .justify-btn {
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      height: 30px;
+      width: 30px;
+      font-size: 17px;
+      outline-style: none;
+
+    }
+
+    #insert-image,
+    #insert-link {
+      width: 75px;
+      height: 75px;
+      font-size: 40px;
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 10px 10px;
+      cursor: pointer;
+      outline-style: none;
+    }
+
+    #title {
+      border: none;
+      background-color: inherit;
+      padding: 0px 30px;
+      font-size: 30px;
+      outline-style: none;
+    }
+
+    #save {
+      width: 80px;
+      height: 50px;
+      font-size: 40px;
+      border: none;
+      outline-style: none;
+      background-color: inherit;
+
+    }
+
+    #paste {
+      width: 81px;
+      height: 81px;
+      font-size: 40px;
+      color: #101011;
+      border-radius: 10px 0px 0px 10px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      outline-style: none;
+      margin: 10px 0px;
+      cursor: pointer;
+    }
+
+    #copy,
+    #cut {
+      width: auto;
+      height: 30px;
+      background-color: #fff;
+      color: rgba(0, 0, 0, 0.6);
+      outline-style: none;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    #copy {
+      border-radius: 0px 10px 0px 0px;
+    }
+
+    #copy:hover,
+    #cut:hover,
+    .format-btn:hover,
+    .justify-btn:hover {
+      background-color: red;
+    }
+
+    #cut {
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 0px 0px 10px 0px;
+    }
+
+
+
+    @media screen and (min-width: 720px) {
+
+  #warn{
+    display: none;
+  }
+    }
+
+
+
+
+
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+
+
+      #warn{
+        background-color: red;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        color: white;
+        display: block;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+    }
+
+
+    @media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3){
+
+      #warn{
+        background-color: red;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        right: 0px;
+        display: block;
+        left: 0px;
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <div id="warn">
+    <h2>This Editor is Not Supported in Mobile Devices</h2> 
+  </div>
+
+
+  <div id="container">
+    <div id="header">
+
+      <button id="title">
+        Xceldevloper
+      </button>
+      <button id="paste" onclick="contentMethod('paste')">
+        <span class="mdi mdi-content-paste"></span>
+      </button>
+
+      <div id="sub-cover">
+
+        <div class="sub">
+          <button id="copy" onclick="contentMethod('copy')">
+            <span class="mdi mdi-content-copy"></span> copy
+          </button>
+
+          <select id="input-font" class="input" onchange="contentMethod('fontName');">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Sans serif">Sans serif</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Palatino">Palatino</option>
+            <option value="Garamond">Garamond</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+            <option value="Arial Black">Arial Black</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+          </select>
+
+          <select id="fontSize" onchange="contentMethod('fontSize');">
+            <option value="1">8</option>
+            <option value="2">9</option>
+            <option value="3">10</option>
+            <option value="4">11</option>
+            <option value="5">12</option>
+            <option value="6">14</option>
+            <option value="7">28</option>
+          </select>
+
+          <button id="increase-font" onclick="fontSize('INCREASE')">
+            <span class="mdi mdi-format-font-size-increase"></span>
+          </button>
+
+          <button id="decrease-font" style="font-size:15px" onclick="fontSize('DECREASE')">
+            <span class="mdi mdi-format-font-size-decrease"></span>
+          </button>
+
+          <button id="decrease-indent" onclick="contentMethod('outdent')">
+            <span class="mdi mdi-format-indent-decrease"></span>
+          </button>
+
+          <button id="increase-indent" onclick="contentMethod('indent')">
+            <span class="mdi mdi-format-indent-increase"></span>
+          </button>
+
+          <button id="list-numbered" onclick="contentMethod('insertOrderedList')">
+            <span class="mdi  mdi-format-list-numbered"></span>
+          </button>
+
+          <button id="list-bulleted" onclick="contentMethod('insertUnorderedList')">
+            <span class="mdi  mdi-format-list-bulleted"></span>
+          </button>
+
+        </div>
+
+        <div class="sub">
+          <button id="cut" onclick="contentMethod('cut')">
+            <span class="mdi mdi-content-cut"></span> cut
+          </button>
+
+          <div class="format-btn-wrapper">
+            <button id="bold" class="format-btn" onclick="contentMethod('bold')">
+              <span class="mdi mdi-format-bold"></span>
+            </button>
+
+            <button id="italic" class="format-btn" onclick="contentMethod('italic')">
+              <span class="mdi mdi-format-italic"></span>
+            </button>
+
+            <button id="underline" class="format-btn" onclick="contentMethod('underline')">
+              <span class="mdi mdi-format-underline"></span>
+            </button>
+
+            <button id="strike-through" class="format-btn" onclick="contentMethod('strikeThrough')">
+              <span class="mdi mdi-format-strikethrough-variant"></span>
+            </button>
+
+            <button id="superscript" class="format-btn">
+              <span class="mdi mdi-format-superscript" onclick="contentMethod('superscript')"></span>
+            </button>
+
+            <button id="subscript" class="format-btn" onclick="contentMethod('subscript')">
+              <span class="mdi mdi-format-subscript"></span>
+            </button>
+
+            <button id="text-color-btn" class="format-btn" onclick="triggerClick('TEXT-COLOR')">
+              <span class="mdi mdi-format-color-text"></span>
+            </button>
+            <input id="text-color-reader" style="visibility: hidden;width:1px;" type="color"
+              onchange="contentMethod('foreColor')">
+
+            <button id="highlight-color-btn" class="format-btn" onclick="triggerClick('HIGHLIGHT-COLOR')">
+              <span class="mdi mdi-format-color-highlight"></span>
+            </button>
+            <input id="highlight-color-reader" style="visibility: hidden;width:1px;" type="color"
+              onchange="contentMethod('backColor')">
+          </div>
+
+          <div class="justify-btn-wrapper">
+            <button id="justify-left" class="justify-btn">
+              <span class="mdi mdi-format-align-left" onclick="contentMethod('justifyLeft')"></span>
+            </button>
+            <button id="justify-center" class="justify-btn">
+              <span class="mdi mdi-format-align-center" onclick="contentMethod('justifyCenter')"></span>
+            </button>
+            <button id="justify-right" class="justify-btn">
+              <span class="mdi mdi-format-align-right" onclick="contentMethod('justifyRight')"></span>
+            </button>
+            <button id="justify-full" class="justify-btn">
+              <span class="mdi mdi-format-align-justify" onclick="contentMethod('justifyFull')"></span>
+            </button>
+            <button class="justify-btn" onclick="contentMethod('insertParagraph')">
+              <span class="mdi mdi-format-float-left"></span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="sub-cover2">
+        <button id="insert-image" onclick="triggerClick('IMAGE')">
+          <span class="mdi mdi-image-plus"></span>
+        </button>
+        <input id="image-reader" type="file" accept="image/*" id="file" style="display: none;" onchange="insertImage()">
+
+        <button id="insert-link" onclick="insertLink()">
+          <span class="mdi mdi-link"></span>
+        </button>
+
+        <button id="save">
+          <span class="mdi mdi-content-save"></span>
+        </button>
+      </div>
+
+
+
+    </div>
+
+    <div id="box">
+      <div id="text-editor" contenteditable="true">
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    var editor = document.getElementById('text-editor');
+    var CUSTOM_CLIPBOARD = '';
+    var options = {
+      textColor: '#000000',
+      highLightColor: '#ffffff',
+      fontSize: 4,
+      fontName: 'Helvetica',
+      isOrderedList: false,
+      isUnOrderedList: false,
+      isBold: false,
+      isItalic: false,
+      isUnderlined: false,
+      isStrikeThrough: false,
+      isSubScript: false,
+      isSuperScript: false,
+      isJUSTIFY: {
+        left: true,
+        center: false,
+        right: false,
+        full: false
+      }
+    };
+    var element = {
+      fontStyle: document.getElementById('input-font'),
+      fontSize: document.getElementById('fontSize'),
+      orderedList: document.getElementById('list-numbered'),
+      unorderedList: document.getElementById('list-bulleted'),
+      bold: document.getElementById('bold'),
+      italic: document.getElementById('italic'),
+      underline: document.getElementById('underline'),
+      strikeThrough: document.getElementById('strike-through'),
+      superscript: document.getElementById('superscript'),
+      subscript: document.getElementById('subscript'),
+      textColor: document.getElementById('text-color-btn'),
+      highLightColor: document.getElementById('highlight-color-btn'),
+      JUSTIFY: {
+        left: document.getElementById('justify-left'),
+        center: document.getElementById('justify-center'),
+        right: document.getElementById('justify-right'),
+        full: document.getElementById('justify-full'),
+      }
+    }
+
+    function contentMethod(command, showui = false, param = null) {
+      editor.focus();
+      if (command !== '' && command !== null && command !== undefined) {
+        switch (command) {
+          case 'fontSize':
+            document.execCommand(command, showui, document.getElementById('fontSize').value);
+            options.fontSize = document.getElementById('fontSize').value;
+            break;
+          case 'fontName':
+            document.execCommand(command, showui, document.getElementById('input-font').value);
+            element.fontStyle.value = document.queryCommandValue('fontName');
+            break;
+          case 'foreColor':
+            var color = document.getElementById('text-color-reader').value;
+            document.execCommand(command, showui, color == 'rgb(255, 255, 255)' || color == '#ffffff' ? "#000000" :
+              color);
+            break;
+          case 'backColor':
+            var color = document.getElementById('highlight-color-reader').value;
+            document.execCommand(command, showui, color);
+            break;
+          default:
+            document.execCommand(command, showui, param);
+        }
+      }
+      sendListeners();
+    }
+
+
+
+    function fontSize(state) {
+      if (state == 'INCREASE' && options.fontSize < 7) {
+        options.fontSize++
+      } else if (state == 'DECREASE' && options.fontSize > 1) {
+        options.fontSize--;
+      }
+      contentMethod('fontSize');
+      document.getElementById('fontSize').value = options.fontSize
+    }
+
+
+    function triggerClick(which) {
+      switch (which) {
+        case 'IMAGE':
+          document.getElementById('image-reader').click();
+          break;
+        case 'TEXT-COLOR':
+          document.getElementById('text-color-reader').click();
+          break;
+        case 'HIGHLIGHT-COLOR':
+          document.getElementById('highlight-color-reader').click();
+      }
+
+    }
+
+
+    function insertImage() {
+      var file = document.querySelector("input[type=file]").files[0];
+      var reader = new FileReader();
+      let dataURI;
+      editor.focus();
+      reader.addEventListener(
+        "load",
+        function () {
+          dataURI = reader.result;
+          const img = document.createElement("img");
+          img.src = dataURI;
+          editor.appendChild(img);
+        },
+        false
+      );
+      if (file) {
+        console.log("s");
+        reader.readAsDataURL(file);
+      }
+    }
+
+
+    function insertLink() {
+      editor.focus();
+      var url = prompt("Enter the website URL");
+      document.execCommand("createLink", false, url);
+    }
+
+    function init() {
+      editor.innerHTML = localStorage.getItem('EDITED_TEXT');
+      element.fontStyle.value = options.fontName
+      //element.fontSize.value = options.fontSize
+      editor.focus();
+      editor.onkeyup = function () {
+        console.log('typing ...' + editor.innerHTML);
+
+        sendListeners();
+      }
+      sendListeners();
+    }
+
+    function getTextData() {
+      var wom = val.match(/\S+/g);
+      var val = editor.innerHTML;
+      return {
+        charactersNoSpaces: val.replace(/\s+/g, "").length,
+        characters: val.length,
+        words: wom ? wom.length : 0,
+        lines: val.split(/\r*\n/).length,
+        text: val
+      }
+    }
+
+    function autoSave() {
+      localStorage.setItem('EDITED_TEXT', editor.innerHTML);
+    }
+
+
+    function onSaved() {
+
+      alert('saved');
+    }
+
+
+
+    function sendListeners() {
+      autoSave();
+      options.isOrderedList = document.queryCommandState('insertOrderedList');
+      options.isOrderedList ? element.orderedList.style.backgroundColor = '#ededed' : element.orderedList.style
+        .backgroundColor = 'inherit'
+
+      options.isUnOrderedList = document.queryCommandState('insertUnorderedList');
+      options.isUnOrderedList ? element.unorderedList.style.backgroundColor = '#ededed' : element.unorderedList.style
+        .backgroundColor = 'inherit'
+
+
+      options.isBold = document.queryCommandState('bold');
+      options.isBold ? element.bold.style.backgroundColor = '#ededed' : element.bold.style.backgroundColor = 'inherit'
+
+      options.isItalic = document.queryCommandState('italic');
+      options.isItalic ? element.italic.style.backgroundColor = '#ededed' : element.italic.style.backgroundColor =
+        'inherit'
+
+      options.isUnderlined = document.queryCommandState('underline');
+      options.isUnderlined ? element.underline.style.backgroundColor = '#ededed' : element.underline.style
+        .backgroundColor =
+        'inherit'
+
+      options.isStrikeThrough = document.queryCommandState('strikeThrough');
+      options.isStrikeThrough ? element.strikeThrough.style.backgroundColor = '#ededed' : element.strikeThrough.style
+        .backgroundColor = 'inherit'
+
+      options.isSuperScript = document.queryCommandState('superscript');
+      options.isSuperScript ? element.superscript.style.backgroundColor = '#ededed' : element.superscript.style
+        .backgroundColor = 'inherit'
+
+      options.isSubScript = document.queryCommandState('subscript');
+      options.isSubScript ? element.subscript.style.backgroundColor = '#ededed' : element.subscript.style
+        .backgroundColor =
+        'inherit'
+
+
+      options.isJUSTIFY.left = document.queryCommandState('justifyLeft');
+      options.isJUSTIFY.left ? element.JUSTIFY.left.style.backgroundColor = '#ededed' : element.JUSTIFY.left.style
+        .backgroundColor = 'inherit'
+
+
+      options.isJUSTIFY.center = document.queryCommandState('justifyCenter');
+      options.isJUSTIFY.center ? element.JUSTIFY.center.style.backgroundColor = '#ededed' : element.JUSTIFY.center.style
+        .backgroundColor = 'inherit'
+
+
+      options.isJUSTIFY.right = document.queryCommandState('justifyRight');
+      options.isJUSTIFY.right ? element.JUSTIFY.right.style.backgroundColor = '#ededed' : element.JUSTIFY.right.style
+        .backgroundColor = 'inherit'
+
+
+      options.isJUSTIFY.full = document.queryCommandState('justifyFull');
+      options.isJUSTIFY.full ? element.JUSTIFY.full.style.backgroundColor = '#ededed' : element.JUSTIFY.full.style
+        .backgroundColor = 'inherit'
+
+
+
+      element.fontSize.value = document.queryCommandValue('fontSize');
+
+
+      options.textColor = document.queryCommandValue('foreColor');
+      element.textColor.style.color = options.textColor;
+
+      options.highLightColor = document.queryCommandValue('backColor');
+      element.highLightColor.style.color = document.queryCommandValue('backColor') == 'rgb(255, 255, 255)' ? "#000" :
+        document.queryCommandValue('backColor');
+    }
+
+
+    (function () { //self invoking function.. this runs when document is ready/loaded
+      init();
+    })();
+  </script>
+
+</body>
+
+</html>
